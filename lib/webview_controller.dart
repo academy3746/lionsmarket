@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -75,6 +77,7 @@ class _WebviewControllerState extends State<WebviewController> {
     try {
       final position = await Geolocator.getCurrentPosition();
       setState(() {
+        print(_position);
         _position = position;
       });
     } catch (e) {
