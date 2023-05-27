@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "823575633695",
+    "project_id": "lionsmarket-aos",
+    "storage_bucket": "lionsmarket-aos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823575633695:android:640f448fb82bda82061a2a",
+        "android_client_info": {
+          "package_name": "kr.sogeum.lionsmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823575633695-t5lk8nd4e3355713r7lkdn9sik71pgp8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.sogeum.lionsmarket",
+            "certificate_hash": "a3588737fb97003660a8fa6b52de6e028e338e0a"
+          }
+        },
+        {
+          "client_id": "823575633695-n5ck62t5c5i1nnok1sglo91dn7crtma1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_08RCq1zCBdzo98fsCqzJ7xPPgTdbguo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823575633695-n5ck62t5c5i1nnok1sglo91dn7crtma1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
