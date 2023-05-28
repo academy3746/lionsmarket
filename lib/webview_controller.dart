@@ -157,253 +157,253 @@ class _WebviewControllerState extends State<WebviewController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        physics: const NeverScrollableScrollPhysics(),
-        dragStartBehavior: DragStartBehavior.start,
-        clipBehavior: Clip.hardEdge,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: WillPopScope(
-            onWillPop: () async {
-              if (_viewController == null) {
-                return false;
-              }
-
-              final currentUrl = await _viewController?.currentUrl();
-
-              if (currentUrl == url) {
-                if (!mounted) return false;
-                return showDialog<bool>(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("앱을 종료하시겠습니까?"),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                            if (kDebugMode) {
-                              print("앱이 포그라운드에서 종료되었습니다.");
-                            }
-                          },
-                          child: const Text("확인"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                            if (kDebugMode) {
-                              print("앱이 종료되지 않았습니다.");
-                            }
-                          },
-                          child: const Text("취소"),
-                        ),
-                      ],
-                    );
-                  },
-                ).then((value) => value ?? false);
-              } else if (await _viewController!.canGoBack() &&
-                  _viewController != null) {
-                _viewController!.goBack();
-                if (kDebugMode) {
-                  print("이전 페이지로 이동하였습니다.");
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return SizedBox(
+            height: constraints.maxHeight,
+            width: constraints.maxWidth,
+            child: WillPopScope(
+              onWillPop: () async {
+                if (_viewController == null) {
+                  return false;
                 }
-                isInMainPage = false;
+
+                final currentUrl = await _viewController?.currentUrl();
+
+                if (currentUrl == url) {
+                  if (!mounted) return false;
+                  return showDialog<bool>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("앱을 종료하시겠습니까?"),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                              if (kDebugMode) {
+                                print("앱이 포그라운드에서 종료되었습니다.");
+                              }
+                            },
+                            child: const Text("확인"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                              if (kDebugMode) {
+                                print("앱이 종료되지 않았습니다.");
+                              }
+                            },
+                            child: const Text("취소"),
+                          ),
+                        ],
+                      );
+                    },
+                  ).then((value) => value ?? false);
+                } else if (await _viewController!.canGoBack() &&
+                    _viewController != null) {
+                  _viewController!.goBack();
+                  if (kDebugMode) {
+                    print("이전 페이지로 이동하였습니다.");
+                  }
+                  isInMainPage = false;
+                  return false;
+                }
                 return false;
-              }
-              return false;
-            },
-            child: SafeArea(
-              child: WebView(
-                initialUrl: url,
-                javascriptMode: JavascriptMode.unrestricted,
-                // ignore: prefer_collection_literals
-                javascriptChannels: <JavascriptChannel>[
-                  _flutterWebviewProJavascriptChannel(context),
-                ].toSet(),
-                userAgent:
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-                onWebResourceError: (error) {
-                  if (kDebugMode) {
-                    print("Error Code: ${error.errorCode}");
-                    print("Error Description: ${error.description}");
-                  }
-                },
-                onWebViewCreated: (WebViewController webViewController) async {
-                  _controller.complete(webViewController);
-                  _viewController = webViewController;
-                  //_clearCache(); // Invalidate Cache
-                  webViewController.currentUrl().then((url) {
-                    if (url == "https://lionsmarket.co.kr/") {
-                      setState(() {
-                        isInMainPage = true;
-                      });
-                    } else {
-                      setState(() {
-                        isInMainPage = false;
-                      });
+              },
+              child: SafeArea(
+                child: WebView(
+                  initialUrl: url,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  // ignore: prefer_collection_literals
+                  javascriptChannels: <JavascriptChannel>[
+                    _flutterWebviewProJavascriptChannel(context),
+                  ].toSet(),
+                  userAgent:
+                      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+                  onWebResourceError: (error) {
+                    if (kDebugMode) {
+                      print("Error Code: ${error.errorCode}");
+                      print("Error Description: ${error.description}");
                     }
-                  });
-                },
-                onPageStarted: (String url) async {
-                  if (kDebugMode) {
-                    print("Current Page: $url");
-                  }
-                },
-                onPageFinished: (String url) async {
-                  if (url.contains("https://lionsmarket.co.kr/") &&
-                      _viewController != null) {
-                    await _viewController!.runJavascript("""
-                          (function() {
-                            function scrollToFocusedInput(event) {
-                              const focusedElement = document.activeElement;
-                              if (focusedElement.tagName.toLowerCase() === 'input' || focusedElement.tagName.toLowerCase() === 'textarea') {
-                                setTimeout(() => {
-                                  focusedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                }, 500);
-                              }
+                  },
+                  onWebViewCreated:
+                      (WebViewController webViewController) async {
+                    _controller.complete(webViewController);
+                    _viewController = webViewController;
+                    //_clearCache(); // Invalidate Cache
+                    webViewController.currentUrl().then((url) {
+                      if (url == "https://lionsmarket.co.kr/") {
+                        setState(() {
+                          isInMainPage = true;
+                        });
+                      } else {
+                        setState(() {
+                          isInMainPage = false;
+                        });
+                      }
+                    });
+                  },
+                  onPageStarted: (String url) async {
+                    if (kDebugMode) {
+                      print("Current Page: $url");
+                    }
+                  },
+                  onPageFinished: (String url) async {
+                    if (url.contains("https://lionsmarket.co.kr/") &&
+                        _viewController != null) {
+                      await _viewController!.runJavascript("""
+                        (function() {
+                          function scrollToFocusedInput(event) {
+                            const focusedElement = document.activeElement;
+                            if (focusedElement.tagName.toLowerCase() === 'input' || focusedElement.tagName.toLowerCase() === 'textarea') {
+                              setTimeout(() => {
+                                focusedElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              }, 500);
                             }
-                  
-                            document.addEventListener('focus', scrollToFocusedInput, true);
-                          })();
-                        """);
-                  }
-
-                  if (url.contains("https://lionsmarket.co.kr/bbs/login.php") &&
-                      _viewController != null) {
-                    await _viewController!.runJavascript("""
-                          async function loadScript() {
-                              return new Promise((resolve, reject) => {
-                                  const script = document.createElement('script');
-                                  script.type = 'text/javascript';
-                                  script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=e3fa10c5c3f32ff65a8f50b5b7da847b&libraries=services';
-                                  script.onload = () => resolve();
-                                  script.onerror = () => reject(new Error('Failed to load the script'));
-                                  document.head.appendChild(script);
-                              });
                           }
-                          
-                          var map;
-                          var geocoder = new kakao.maps.services.Geocoder();
-                          
-                          function getCurrentPosition() {
-                              return new Promise((resolve, reject) => {
-                                  navigator.geolocation.getCurrentPosition(resolve, reject);
-                              });
-                          }
-                          
-                          async function initMap() {
-                              try {
-                                  const position = await getCurrentPosition();
-                                  var lat = position.coords.latitude;
-                                  var lon = position.coords.longitude;
-                                  var locPosition = new kakao.maps.LatLng(lat, lon);
-                          
-                                  var mapContainer = document.getElementById('map'),
-                                      mapOption = {
-                                          center: locPosition,
-                                          level: 4
-                                      };
-                          
-                                  map = new kakao.maps.Map(mapContainer, mapOption);
-                              } catch (error) {
-                                  console.error("Error in initMap:", error);
-                              }
-                          }
-                          
-                          function getDistrict(address) {
-                              var district = "";
-                              var splitAddr = address.split(' ');
-                          
-                              if (splitAddr.length > 1) {
-                                  district = splitAddr[1];
-                              }
-                          
-                              return district;
-                          }
-                          
-                          async function storeLocation() {
-                              try {
-                                  const position = await getCurrentPosition();
-                                  var lat = position.coords.latitude;
-                                  var lon = position.coords.longitude;
-                                  var locPosition = new kakao.maps.LatLng(lat, lon);
-                          
-                                  var marker = new kakao.maps.Marker({
-                                      map: map,
-                                      position: locPosition
-                                  });
-                          
-                                  map.setCenter(locPosition);
-                          
-                                  geocoder.coord2Address(locPosition.getLng(), locPosition.getLat(), function (result, status) {
-                                      if (status === kakao.maps.services.Status.OK) {
-                                          var detailAddr = result[0].address.address_name;
-                                          var district = getDistrict(detailAddr);
-                                          setLocation(locPosition.getLat(), locPosition.getLng(), detailAddr, district);
-                                      }
-                                  });
-                              } catch (error) {
-                                  console.error("Error in storeLocation:", error);
-                              }
-                          }
-                          
-                          function setLocation(lat, lon, addr, district) {
-                              document.getElementById('latitude').value = lat;
-                              document.getElementById('longitude').value = lon;
-                              document.getElementById('addr').value = addr;
-                              document.getElementById('district').value = district;
-                          }
-                          
-                          async function initApp() {
-                              await initMap();
-                              storeLocation();
-                          }
-                          
-                          async function runApp() {
-                              try {
-                                  await loadScript();
-                                  initApp();
-                              } catch (error) {
-                                  console.error("Error in runApp:", error);
-                              }
-                          }
-                          
-                          runApp();
-                        """);
-
-                    final cookies = await _getCookies(_viewController!);
-                    await _saveCookies(cookies);
-                  } else {
-                    final cookies = await _loadCookies();
-                    if (cookies != null) {
-                      await _setCookies(_viewController!, cookies);
+                
+                          document.addEventListener('focus', scrollToFocusedInput, true);
+                        })();
+                      """);
                     }
-                  }
-                },
-                geolocationEnabled: true,
-                zoomEnabled: false,
-                gestureNavigationEnabled: true,
-                // ignore: prefer_collection_literals
-                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                  Factory<EagerGestureRecognizer>(
-                        () => EagerGestureRecognizer(),
-                  ),
-                ].toSet(),
-                navigationDelegate: (NavigationRequest request) async {
-                  if (request.url.startsWith("tel:")) {
-                    if (await canLaunchUrl(Uri.parse(request.url))) {
-                      await launchUrl(Uri.parse(request.url));
+
+                    if (url.contains(
+                            "https://lionsmarket.co.kr/bbs/login.php") &&
+                        _viewController != null) {
+                      await _viewController!.runJavascript("""
+                        async function loadScript() {
+                            return new Promise((resolve, reject) => {
+                                const script = document.createElement('script');
+                                script.type = 'text/javascript';
+                                script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=e3fa10c5c3f32ff65a8f50b5b7da847b&libraries=services';
+                                script.onload = () => resolve();
+                                script.onerror = () => reject(new Error('Failed to load the script'));
+                                document.head.appendChild(script);
+                            });
+                        }
+                        
+                        var map;
+                        var geocoder = new kakao.maps.services.Geocoder();
+                        
+                        function getCurrentPosition() {
+                            return new Promise((resolve, reject) => {
+                                navigator.geolocation.getCurrentPosition(resolve, reject);
+                            });
+                        }
+                        
+                        async function initMap() {
+                            try {
+                                const position = await getCurrentPosition();
+                                var lat = position.coords.latitude;
+                                var lon = position.coords.longitude;
+                                var locPosition = new kakao.maps.LatLng(lat, lon);
+                        
+                                var mapContainer = document.getElementById('map'),
+                                    mapOption = {
+                                        center: locPosition,
+                                        level: 4
+                                    };
+                        
+                                map = new kakao.maps.Map(mapContainer, mapOption);
+                            } catch (error) {
+                                console.error("Error in initMap:", error);
+                            }
+                        }
+                        
+                        function getDistrict(address) {
+                            var district = "";
+                            var splitAddr = address.split(' ');
+                        
+                            if (splitAddr.length > 1) {
+                                district = splitAddr[1];
+                            }
+                        
+                            return district;
+                        }
+                        
+                        async function storeLocation() {
+                            try {
+                                const position = await getCurrentPosition();
+                                var lat = position.coords.latitude;
+                                var lon = position.coords.longitude;
+                                var locPosition = new kakao.maps.LatLng(lat, lon);
+                        
+                                var marker = new kakao.maps.Marker({
+                                    map: map,
+                                    position: locPosition
+                                });
+                        
+                                map.setCenter(locPosition);
+                        
+                                geocoder.coord2Address(locPosition.getLng(), locPosition.getLat(), function (result, status) {
+                                    if (status === kakao.maps.services.Status.OK) {
+                                        var detailAddr = result[0].address.address_name;
+                                        var district = getDistrict(detailAddr);
+                                        setLocation(locPosition.getLat(), locPosition.getLng(), detailAddr, district);
+                                    }
+                                });
+                            } catch (error) {
+                                console.error("Error in storeLocation:", error);
+                            }
+                        }
+                        
+                        function setLocation(lat, lon, addr, district) {
+                            document.getElementById('latitude').value = lat;
+                            document.getElementById('longitude').value = lon;
+                            document.getElementById('addr').value = addr;
+                            document.getElementById('district').value = district;
+                        }
+                        
+                        async function initApp() {
+                            await initMap();
+                            storeLocation();
+                        }
+                        
+                        async function runApp() {
+                            try {
+                                await loadScript();
+                                initApp();
+                            } catch (error) {
+                                console.error("Error in runApp:", error);
+                            }
+                        }
+                        
+                        runApp();
+                      """);
+
+                      final cookies = await _getCookies(_viewController!);
+                      await _saveCookies(cookies);
+                    } else {
+                      final cookies = await _loadCookies();
+                      if (cookies != null) {
+                        await _setCookies(_viewController!, cookies);
+                      }
                     }
-                    return NavigationDecision.prevent;
-                  }
-                  return NavigationDecision.navigate;
-                },
+                  },
+                  geolocationEnabled: true,
+                  zoomEnabled: false,
+                  gestureNavigationEnabled: true,
+                  // ignore: prefer_collection_literals
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                    Factory<EagerGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                    ),
+                  ].toSet(),
+                  navigationDelegate: (NavigationRequest request) async {
+                    if (request.url.startsWith("tel:")) {
+                      if (await canLaunchUrl(Uri.parse(request.url))) {
+                        await launchUrl(Uri.parse(request.url));
+                      }
+                      return NavigationDecision.prevent;
+                    }
+                    return NavigationDecision.navigate;
+                  },
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
