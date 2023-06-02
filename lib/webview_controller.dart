@@ -267,6 +267,9 @@ class _WebviewControllerState extends State<WebviewController> {
                           document.addEventListener('focus', scrollToFocusedInput, true);
                         })();
                       """);
+
+                      final cookies = await _getCookies(_viewController!);
+                      await _saveCookies(cookies);
                     }
 
                     if (url.contains(
@@ -373,9 +376,6 @@ class _WebviewControllerState extends State<WebviewController> {
                         runApp();
                       """);
 
-                      final cookies = await _getCookies(_viewController!);
-                      await _saveCookies(cookies);
-                    } else {
                       final cookies = await _loadCookies();
                       if (cookies != null) {
                         await _setCookies(_viewController!, cookies);
