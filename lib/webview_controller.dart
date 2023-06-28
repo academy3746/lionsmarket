@@ -12,8 +12,10 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lionsmarket/msg_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 
 class WebviewController extends StatefulWidget {
   const WebviewController({Key? key}) : super(key: key);
@@ -28,6 +30,12 @@ class _WebviewControllerState extends State<WebviewController> {
   // Initialize URL
   final String url = "https://lionsmarket.co.kr/";
   bool isInMainPage = true;
+
+  // Initialize Cookie Manager
+  final WebviewCookieManager cookieManager = WebviewCookieManager();
+  final String cookieValue = "";
+  final String domain = "lionsmarket.co.kr";
+  final String cookieName = "";
 
   // Initialize Webview Controller
   final Completer<WebViewController> _controller =
@@ -106,7 +114,7 @@ class _WebviewControllerState extends State<WebviewController> {
     }
   }
 
-  Future<String> _getCookies(WebViewController controller) async {
+  /*Future<String> _getCookies(WebViewController controller) async {
     final String cookies =
         await controller.runJavascriptReturningResult('document.cookie;');
     return cookies;
@@ -125,7 +133,7 @@ class _WebviewControllerState extends State<WebviewController> {
   Future<String?> _loadCookies() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('cookies');
-  }
+  }*/
 
   JavascriptChannel _flutterWebviewProJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
@@ -220,10 +228,6 @@ class _WebviewControllerState extends State<WebviewController> {
                   javascriptChannels: <JavascriptChannel>[
                     _flutterWebviewProJavascriptChannel(context),
                   ].toSet(),
-                  /*
-                  userAgent:
-                      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-                  */
                   onWebResourceError: (error) {
                     if (kDebugMode) {
                       print("Error Code: ${error.errorCode}");
@@ -246,13 +250,29 @@ class _WebviewControllerState extends State<WebviewController> {
                         });
                       }
                     });
+
+                    await cookieManager.getCookies(null);
+
+                    await cookieManager.setCookies([
+                      Cookie(cookieName, cookieValue)
+                        ..domain = domain
+                        ..expires = DateTime.now().add(
+                          const Duration(
+                            days: 365,
+                          ),
+                        )
+                        ..httpOnly = false
+                    ]);
                   },
                   onPageStarted: (String url) async {
-                    if (kDebugMode) {
-                      print("Current Page: $url");
-                    }
+                    print("Current Page: $url");
                   },
                   onPageFinished: (String url) async {
+                    final cookie = await cookieManager.getCookies(url);
+                    for (var cookies in cookie) {
+                      print(cookies);
+                    }
+
                     if (url.contains("https://lionsmarket.co.kr/") &&
                         _viewController != null) {
                       await _viewController!.runJavascript("""
@@ -270,8 +290,8 @@ class _WebviewControllerState extends State<WebviewController> {
                         })();
                       """);
 
-                      final cookies = await _getCookies(_viewController!);
-                      await _saveCookies(cookies);
+                      /*final cookies = await _getCookies(_viewController!);
+                      await _saveCookies(cookies);*/
                     }
 
                     if (url.contains(
@@ -378,10 +398,10 @@ class _WebviewControllerState extends State<WebviewController> {
                         runApp();
                       """);
 
-                      final cookies = await _loadCookies();
+                      /*final cookies = await _loadCookies();
                       if (cookies != null) {
                         await _setCookies(_viewController!, cookies);
-                      }
+                      }*/
                     }
                   },
                   geolocationEnabled: true,

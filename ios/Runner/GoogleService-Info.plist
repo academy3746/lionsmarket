@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>91675607666-olvd3g899bt77gtadaq9iui3akin9drl.apps.googleusercontent.com</string>
+	<string>823575633695-l6ug4uauqlt4c4lpcu9p04rotvqes9q5.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.91675607666-olvd3g899bt77gtadaq9iui3akin9drl</string>
+	<string>com.googleusercontent.apps.823575633695-l6ug4uauqlt4c4lpcu9p04rotvqes9q5</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>823575633695-t5lk8nd4e3355713r7lkdn9sik71pgp8.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAe9pssV7Hf1f7LcJbBdwz4yrBRf_HUwss</string>
+	<string>AIzaSyA0HPFgsUkCyFxB1Akh-N8KhpArQVUJaUQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>91675607666</string>
+	<string>823575633695</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>kr.sogeum.lionsmarket</string>
 	<key>PROJECT_ID</key>
-	<string>lionsmarket-ios-7984b</string>
+	<string>lionsmarket-aos</string>
 	<key>STORAGE_BUCKET</key>
-	<string>lionsmarket-ios-7984b.appspot.com</string>
+	<string>lionsmarket-aos.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:91675607666:ios:65eb3813bcba2cf65638eb</string>
+	<string>1:823575633695:ios:7a7c17dd9771440e061a2a</string>
 </dict>
 </plist>
