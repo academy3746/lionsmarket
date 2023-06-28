@@ -57,14 +57,6 @@ class _WebviewControllerState extends State<WebviewController> {
     _requestStoragePermission();
   }
 
-  /*
-  Future<void> _clearCache() async {
-    if (_viewController != null) {
-      await _viewController!.clearCache();
-    }
-  }
-  */
-
   // 위치 권한 요청
   Future<void> _requestPermission() async {
     final status = await Geolocator.checkPermission();
@@ -113,27 +105,6 @@ class _WebviewControllerState extends State<WebviewController> {
       }
     }
   }
-
-  /*Future<String> _getCookies(WebViewController controller) async {
-    final String cookies =
-        await controller.runJavascriptReturningResult('document.cookie;');
-    return cookies;
-  }
-
-  Future<void> _setCookies(WebViewController controller, String cookies) async {
-    await controller
-        .runJavascriptReturningResult('document.cookie="$cookies";');
-  }
-
-  Future<void> _saveCookies(String cookies) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('cookies', cookies);
-  }
-
-  Future<String?> _loadCookies() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('cookies');
-  }*/
 
   JavascriptChannel _flutterWebviewProJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
@@ -289,9 +260,6 @@ class _WebviewControllerState extends State<WebviewController> {
                           document.addEventListener('focus', scrollToFocusedInput, true);
                         })();
                       """);
-
-                      /*final cookies = await _getCookies(_viewController!);
-                      await _saveCookies(cookies);*/
                     }
 
                     if (url.contains(
