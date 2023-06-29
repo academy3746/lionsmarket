@@ -350,11 +350,6 @@ class _WebviewControllerState extends State<WebviewController> {
                         
                         runApp();
                       """);
-
-                      /*final cookies = await _loadCookies();
-                      if (cookies != null) {
-                        await _setCookies(_viewController!, cookies);
-                      }*/
                     }
                   },
                   geolocationEnabled: true,
