@@ -1,4 +1,3 @@
-/// Performing Firebase Messaging service CONTROLLER
 // ignore_for_file: avoid_print
 
 import 'package:firebase_messaging/firebase_messaging.dart';
