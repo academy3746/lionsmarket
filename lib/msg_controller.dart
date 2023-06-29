@@ -38,7 +38,7 @@ class MsgController extends GetxController {
     /// title
     'High Importance Notifications',
     description: 'This channel is used for important notifications.',
-    // description
+    /// description
     importance: Importance.max,
   );
 
