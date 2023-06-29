@@ -25,24 +25,24 @@ class WebviewController extends StatefulWidget {
 }
 
 class _WebviewControllerState extends State<WebviewController> {
-  // Initialize URL
+  /// Initialize URL
   final String url = "https://lionsmarket.co.kr/";
   bool isInMainPage = true;
 
-  // Initialize Cookie Manager
+  /// Initialize Cookie Manager
   final WebviewCookieManager cookieManager = WebviewCookieManager();
   final String cookieValue = "";
   final String domain = "lionsmarket.co.kr";
   final String cookieName = "";
 
-  // Initialize Webview Controller
+  /// Initialize Webview Controller
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   WebViewController? _viewController;
 
   final MsgController _msgController = Get.put(MsgController());
 
-  // Initialize GPS
+  /// Initialize GPS
   Position? _position;
 
   @override
@@ -55,7 +55,7 @@ class _WebviewControllerState extends State<WebviewController> {
     _requestStoragePermission();
   }
 
-  // 위치 권한 요청
+  /// 위치 권한 요청
   Future<void> _requestPermission() async {
     final status = await Geolocator.checkPermission();
 
@@ -71,7 +71,7 @@ class _WebviewControllerState extends State<WebviewController> {
     await _updatePosition();
   }
 
-  // 위치 정보 업데이트
+  /// 위치 정보 업데이트
   Future<void> _updatePosition() async {
     try {
       final position = await Geolocator.getCurrentPosition();
@@ -86,7 +86,7 @@ class _WebviewControllerState extends State<WebviewController> {
     }
   }
 
-  // 저장소 권한 요청
+  /// 저장소 권한 요청
   void _requestStoragePermission() async {
     PermissionStatus status = await Permission.manageExternalStorage.status;
     if (!status.isGranted) {
@@ -100,7 +100,7 @@ class _WebviewControllerState extends State<WebviewController> {
     }
   }
 
-  // Webview 자바스크립트 채널
+  /// Webview 자바스크립트 채널
   JavascriptChannel _flutterWebviewProJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'flutter_webview_pro',
@@ -122,7 +122,7 @@ class _WebviewControllerState extends State<WebviewController> {
     );
   }
 
-  // Firebase 토큰 GET
+  /// Firebase 토큰 GET
   Future<String?> _getPushToken() async {
     return await _msgController.getToken();
   }

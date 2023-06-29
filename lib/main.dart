@@ -25,15 +25,17 @@ Future<void> _requestLocationPermission() async {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Firebase 연동 시 필히 import
-  await Firebase.initializeApp(); // Firebase State 초기화
+  /// Firebase 연동 시 필히 import
+  WidgetsFlutterBinding.ensureInitialized();
+  /// Firebase State 초기화
+  await Firebase.initializeApp();
   bool data = await fetchData();
 
   print(data);
 
   await _requestLocationPermission();
 
-  // Throw & Catch Exception
+  /// Throw & Catch Exception
   runZonedGuarded(
     () async {},
     (error, stack) {
@@ -45,7 +47,7 @@ Future<void> main() async {
 
   await SystemChrome.setPreferredOrientations(
     [
-      // 어플리케이션 화면 세로 고정
+      /// 어플리케이션 화면 세로 고정
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ],
