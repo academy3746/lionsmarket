@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -27,9 +29,7 @@ Future<void> main() async {
   await Firebase.initializeApp(); // Firebase State 초기화
   bool data = await fetchData();
 
-  if (kDebugMode) {
-    print(data);
-  }
+  print(data);
 
   await _requestLocationPermission();
 
