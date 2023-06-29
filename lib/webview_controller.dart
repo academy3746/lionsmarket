@@ -71,6 +71,7 @@ class _WebviewControllerState extends State<WebviewController> {
     await _updatePosition();
   }
 
+  // 위치 정보 업데이트
   Future<void> _updatePosition() async {
     try {
       final position = await Geolocator.getCurrentPosition();
@@ -79,31 +80,27 @@ class _WebviewControllerState extends State<WebviewController> {
         _position = position;
       });
     } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
+      print(e.toString());
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("위치 정보를 받아오는 데 실패했습니다.")));
     }
   }
 
+  // 저장소 권한 요청
   void _requestStoragePermission() async {
     PermissionStatus status = await Permission.manageExternalStorage.status;
     if (!status.isGranted) {
       PermissionStatus result =
           await Permission.manageExternalStorage.request();
       if (!result.isGranted) {
-        if (kDebugMode) {
-          print('저장소 접근 권한이 승인되었습니다.');
-        }
+        print('저장소 접근 권한이 승인되었습니다.');
       } else {
-        if (kDebugMode) {
-          print('저장소 접근 권한이 거부되었습니다.');
-        }
+        print('저장소 접근 권한이 거부되었습니다.');
       }
     }
   }
 
+  // Webview 자바스크립트 채널
   JavascriptChannel _flutterWebviewProJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
       name: 'flutter_webview_pro',
@@ -114,9 +111,7 @@ class _WebviewControllerState extends State<WebviewController> {
             String userId = jsonData['data']['userId'];
             GetStorage().write('userId', userId);
 
-            if (kDebugMode) {
-              print('@addJavaScriptHandler userId $userId');
-            }
+            print('@addJavaScriptHandler userId $userId');
 
             String? token = await _getPushToken();
             _viewController?.runJavascript('tokenUpdate("$token")');
@@ -127,6 +122,7 @@ class _WebviewControllerState extends State<WebviewController> {
     );
   }
 
+  // Firebase 토큰 GET
   Future<String?> _getPushToken() async {
     return await _msgController.getToken();
   }
@@ -159,18 +155,14 @@ class _WebviewControllerState extends State<WebviewController> {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
-                              if (kDebugMode) {
-                                print("앱이 포그라운드에서 종료되었습니다.");
-                              }
+                              print("앱이 포그라운드에서 종료되었습니다.");
                             },
                             child: const Text("확인"),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(false);
-                              if (kDebugMode) {
-                                print("앱이 종료되지 않았습니다.");
-                              }
+                              print("앱이 종료되지 않았습니다.");
                             },
                             child: const Text("취소"),
                           ),
@@ -181,9 +173,7 @@ class _WebviewControllerState extends State<WebviewController> {
                 } else if (await _viewController!.canGoBack() &&
                     _viewController != null) {
                   _viewController!.goBack();
-                  if (kDebugMode) {
-                    print("이전 페이지로 이동하였습니다.");
-                  }
+                  print("이전 페이지로 이동하였습니다.");
                   isInMainPage = false;
                   return false;
                 }
@@ -198,10 +188,8 @@ class _WebviewControllerState extends State<WebviewController> {
                     _flutterWebviewProJavascriptChannel(context),
                   ].toSet(),
                   onWebResourceError: (error) {
-                    if (kDebugMode) {
-                      print("Error Code: ${error.errorCode}");
-                      print("Error Description: ${error.description}");
-                    }
+                    print("Error Code: ${error.errorCode}");
+                    print("Error Description: ${error.description}");
                   },
                   onWebViewCreated:
                       (WebViewController webViewController) async {
@@ -236,9 +224,9 @@ class _WebviewControllerState extends State<WebviewController> {
                     print("Current Page: $url");
                   },
                   onPageFinished: (String url) async {
-                    final cookie = await cookieManager.getCookies(url);
-                    for (var cookies in cookie) {
-                      print(cookies);
+                    final cookies = await cookieManager.getCookies(url);
+                    for (var cookie in cookies) {
+                      print(cookie);
                     }
 
                     if (url.contains("https://lionsmarket.co.kr/") &&

@@ -84,7 +84,7 @@ Future<bool> fetchData() async {
 
   await Future.delayed(
       const Duration(
-        seconds: 1,
+        milliseconds: 500,
       ), () {
     data = true;
   });
