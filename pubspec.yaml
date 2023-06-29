@@ -41,7 +41,6 @@ dependencies:
   firebase_messaging: ^14.4.0
   get: ^4.6.5
   flutter_local_notifications: ^9.1.5
-  cupertino_back_gesture: ^0.1.0
   permission_handler: ^10.2.0
   flutter_webview_pro: ^3.0.1+4
   path_provider: ^2.0.12
