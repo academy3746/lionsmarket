@@ -209,7 +209,6 @@ class _WebviewControllerState extends State<WebviewController> {
                       (WebViewController webViewController) async {
                     _controller.complete(webViewController);
                     _viewController = webViewController;
-                    //_clearCache(); // Invalidate Cache
                     webViewController.currentUrl().then((url) {
                       if (url == "https://lionsmarket.co.kr/") {
                         setState(() {
@@ -229,7 +228,7 @@ class _WebviewControllerState extends State<WebviewController> {
                         ..domain = domain
                         ..expires = DateTime.now().add(
                           const Duration(
-                            days: 365,
+                            days: 90,
                           ),
                         )
                         ..httpOnly = false

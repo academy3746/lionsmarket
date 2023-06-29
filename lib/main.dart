@@ -70,6 +70,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF3A8BFF),
         ),
         primaryColor: const Color(0xFF3A8BFF),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
